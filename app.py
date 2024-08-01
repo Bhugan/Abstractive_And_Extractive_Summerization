@@ -6,6 +6,11 @@ from nltk.tokenize import sent_tokenize
 from nltk.corpus import stopwords
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize the summarizer for abstractive summarization
 summarizer = pipeline("summarization")
@@ -32,6 +37,7 @@ def textrank_summary(text, top_n=5):
         summary = ' '.join(summary_sentences)
         return summary
     except Exception as e:
+        logger.error(f"Error in extractive summarization: {e}")
         return f"Error in extractive summarization: {e}"
 
 # Define the Streamlit app
@@ -56,7 +62,9 @@ def main():
             st.write("### Summary")
             st.write(summary)
         except Exception as e:
+            logger.error(f"An error occurred: {e}")
             st.error(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
+
